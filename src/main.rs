@@ -7,7 +7,7 @@ use std::{
 };
 
 use clap::Parser;
-use image::{GenericImageView, RgbaImage};
+use image::{DynamicImage, GenericImageView, RgbaImage};
 
 use lab_pbr_cli::cli::arguments::{ARGUMENTS, Arguments};
 
@@ -77,7 +77,11 @@ fn create_specular_texture(cli_arguments: &Arguments, texture_dimensions: (u32, 
     let mut output_texture = RgbaImage::new(texture_dimensions.0, texture_dimensions.1);
     let smoothness_map = image::open(&cli_arguments.smoothness_map_path).unwrap();
     let reflectance_map = image::open(&cli_arguments.reflectance_map_path).unwrap();
-    let emissiveness_map = image::open(&cli_arguments.emissiveness_map_path).unwrap();
+    let emissiveness_map = if cli_arguments.emissiveness_map_path.is_some() {
+        image::open(cli_arguments.emissiveness_map_path.clone().unwrap()).unwrap()
+    } else {
+        DynamicImage::ImageRgba8(RgbaImage::new(texture_dimensions.0, texture_dimensions.1))
+    };
     for (x, y, output_pixel) in output_texture.enumerate_pixels_mut() {
         output_pixel.0 = [
             // Store the smoothness values in the red and green channels
