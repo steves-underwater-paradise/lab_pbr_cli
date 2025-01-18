@@ -51,8 +51,8 @@ fn create_normal_texture(cli_arguments: &Arguments, texture_dimensions: (u32, u3
             normal_map_pixel_color[RGBA_GREEN_INDEX],
             // Store the ambient occlusion value in the blue channel
             ambient_occlusion_map.get_pixel(x, y).0[RGBA_RED_INDEX],
-            // Store the height value in the alpha channel
-            height_map.get_pixel(x, y).0[RGBA_RED_INDEX],
+            // Store the height value in the alpha channel (1-255)
+            height_map.get_pixel(x, y).0[RGBA_RED_INDEX].clamp(1, 255),
         ];
     }
 
