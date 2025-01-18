@@ -38,7 +38,11 @@ fn create_normal_texture(cli_arguments: &Arguments, texture_dimensions: (u32, u3
     let mut output_texture = RgbaImage::new(texture_dimensions.0, texture_dimensions.1);
     let normal_map = image::open(&cli_arguments.normal_map_path).unwrap();
     let ambient_occlusion_map = image::open(&cli_arguments.ambient_occlusion_map_path).unwrap();
-    let height_map = image::open(&cli_arguments.height_map_path).unwrap();
+    let height_map = if cli_arguments.height_map_path.is_some() {
+        image::open(cli_arguments.height_map_path.clone().unwrap()).unwrap()
+    } else {
+        DynamicImage::ImageRgba8(RgbaImage::new(texture_dimensions.0, texture_dimensions.1))
+    };
     for (x, y, output_pixel) in output_texture.enumerate_pixels_mut() {
         let normal_map_pixel_color = normal_map.get_pixel(x, y).0;
         output_pixel.0 = [
@@ -76,7 +80,11 @@ fn create_normal_texture(cli_arguments: &Arguments, texture_dimensions: (u32, u3
 fn create_specular_texture(cli_arguments: &Arguments, texture_dimensions: (u32, u32)) {
     let mut output_texture = RgbaImage::new(texture_dimensions.0, texture_dimensions.1);
     let smoothness_map = image::open(&cli_arguments.smoothness_map_path).unwrap();
-    let reflectance_map = image::open(&cli_arguments.reflectance_map_path).unwrap();
+    let reflectance_map = if cli_arguments.reflectance_map_path.is_some() {
+        image::open(cli_arguments.reflectance_map_path.clone().unwrap()).unwrap()
+    } else {
+        DynamicImage::ImageRgba8(RgbaImage::new(texture_dimensions.0, texture_dimensions.1))
+    };
     let emissiveness_map = if cli_arguments.emissiveness_map_path.is_some() {
         image::open(cli_arguments.emissiveness_map_path.clone().unwrap()).unwrap()
     } else {
