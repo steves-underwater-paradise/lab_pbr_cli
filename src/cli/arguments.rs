@@ -14,11 +14,11 @@ pub struct Arguments {
     #[arg(long)]
     pub height_map_path: PathBuf,
     #[arg(short, long)]
-    pub smoothness_map: PathBuf,
+    pub smoothness_map_path: PathBuf,
     #[arg(short, long)]
-    pub reflectance_map: PathBuf,
+    pub reflectance_map_path: PathBuf,
     #[arg(short, long)]
-    pub emissiveness_map: PathBuf,
+    pub emissiveness_map_path: PathBuf,
     #[arg(short, long, default_value = env::current_dir().expect("should be able to get current working directory").into_os_string())]
     pub output_directory: PathBuf,
 }
