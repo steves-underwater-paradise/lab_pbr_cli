@@ -7,7 +7,7 @@ use std::{
 };
 
 use clap::Parser;
-use image::{DynamicImage, GenericImageView, RgbaImage};
+use image::{DynamicImage, GenericImageView, Luma, Pixel, RgbaImage};
 
 use lab_pbr_cli::cli::arguments::{ARGUMENTS, Arguments};
 
@@ -41,7 +41,11 @@ fn create_normal_texture(cli_arguments: &Arguments, texture_dimensions: (u32, u3
     let height_map = if cli_arguments.height_map_path.is_some() {
         image::open(cli_arguments.height_map_path.clone().unwrap()).unwrap()
     } else {
-        DynamicImage::ImageRgba8(RgbaImage::new(texture_dimensions.0, texture_dimensions.1))
+        DynamicImage::ImageRgba8(RgbaImage::from_pixel(
+            texture_dimensions.0,
+            texture_dimensions.1,
+            Luma([255]).to_rgba(),
+        ))
     };
     for (x, y, output_pixel) in output_texture.enumerate_pixels_mut() {
         let normal_map_pixel_color = normal_map.get_pixel(x, y).0;
